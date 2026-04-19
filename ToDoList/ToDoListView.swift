@@ -14,20 +14,37 @@ struct ToDoListView: View {
                  "Bring the Awesome",
                  "Take a Vacation"]
     
+    @State private var sheetIsPresented = false
+    
     var body: some View {
         NavigationStack {
             List {
-                ForEach(toDos, id: \.self) { todo in
+                ForEach(toDos, id: \.self) { toDo in
                     NavigationLink {
-                        DetailView(passedValue: todo)
+                        DetailView(toDo: toDo)
                     } label: {
-                        Text(todo)
+                        Text(toDo)
                     }
+                    .font(.title2)
                 }
-                
             }
             .navigationTitle("To Do List:")
             .listStyle(.plain)
+            .sheet(isPresented: $sheetIsPresented) {
+                NavigationStack {
+                    DetailView(toDo: "")
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        sheetIsPresented.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .tint(.blue)
+                }
+            }
         }
     }
 }
